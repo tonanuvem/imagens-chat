@@ -52,6 +52,15 @@ quarkus.dynamodb.aws.region=us-east-1
 quarkus.dynamodb.aws.credentials.type=default
 ```
 
+## Running via docker-compose
+
+```
+git clone
+cd imagens-chat
+./mvnw package
+docker-compose up -d
+```
+
 ## Front-end utiliza Materialize CSS com jQuery
 
 website: https://materializecss.com/
