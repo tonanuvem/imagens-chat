@@ -47,7 +47,7 @@ RUN microdnf install wget unzip \
     && mkdir /opt/aws \
     && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/opt/aws/awscliv2.zip" \
     && unzip /opt/aws/awscliv2.zip \
-    && sh /opt/aws/aws/install \
+    && sh /opt/aws/install \
     && echo AWSCLI \
     && aws --version \
     && cat >> /.aws/credentials <<EOL \
