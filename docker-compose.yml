@@ -2,7 +2,10 @@ version: "3"
 services:
     imagens:
       container_name: imagens
-      image: imagens #tonanuvem/imagens-chat
+      #image: tonanuvem/imagens-chat
+      build: 
+        context: .
+        dockerfile: ./src/main/docker/Dockerfile.jvm
       ports:
         - "8081:8081"
       #environment: só pega via command
