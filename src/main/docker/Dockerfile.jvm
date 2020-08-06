@@ -43,7 +43,7 @@ RUN microdnf install curl ca-certificates ${JAVA_PACKAGE} \
     && echo "securerandom.source=file:/dev/urandom" >> /etc/alternatives/jre/lib/security/java.security
 
 # Instalar UNZIP e AWS para automatizar a criação do DynamoDB LOCAL
-RUN microdnf install wget unzip \
+RUN microdnf install wget nc unzip \
     && mkdir /opt/aws \
     && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/opt/aws/awscliv2.zip" \
     && unzip /opt/aws/awscliv2.zip \
