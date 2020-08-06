@@ -50,6 +50,7 @@ RUN microdnf install wget unzip \
     && aws/install \
     && echo AWSCLI \
     && aws --version \
+    && mkdir /.aws \
     && touch /.aws/credentials \
     && cat >> /.aws/credentials <<EOL \
     && [default] \
