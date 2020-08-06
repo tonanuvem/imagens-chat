@@ -2,7 +2,7 @@ version: "3"
 services:
     imagens:
       container_name: imagens
-      image: tonanuvem/imagens-chat
+      image: imagens #tonanuvem/imagens-chat
       ports:
         - "8081:8081"
       environment:
@@ -15,6 +15,19 @@ services:
       command: |
                /bin/bash -c "
                  echo executando entrypoint manual
+                 #echo "[default]"  >> /.aws/credentials
+                 #echo "aws_access_key_id = test-key" >> /.aws/credentials
+                 #echo "aws_secret_access_key = test-secret" >> /.aws/credentials
+                 #cat /.aws/credentials
+                 aws --version
+                 echo Waiting for DynamoDB service start...;
+                 while ! nc -z dynamodb 8000; do
+                   echo .
+                   sleep 5
+                 done
+                 echo DynamoDB Connected!;
+                 aws dynamodb create-table --table-name ImagensDB --endpoint-url http://dynamodb:8000  --attribute-definitions AttributeName=idName,AttributeType=S --key-schema AttributeName=idName,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
+                 aws dynamodb list-tables --endpoint-url http://dynamodb:8000
                  java -Dquarkus.http.host=0.0.0.0 -Dquarkus.dynamodb.endpoint-override=http://dynamodb:8000 -Dquarkus.dynamodb.aws.region=us-east-1 -Dquarkus.dynamodb.aws.credentials.type=static -Dquarkus.dynamodb.aws.credentials.static-provider.access-key-id=test-key -Dquarkus.dynamodb.aws.credentials.static-provider.secret-access-key=test-secret -Djava.util.logging.manager=org.jboss.logmanager.LogManager -XX:+ExitOnOutOfMemoryError -cp . -jar /deployments/app.jar
                "
     dynamodb:
@@ -25,8 +38,8 @@ services:
       volumes:
         - ./volumes/dynamodb:/data/
       environment:
-        AWS_ACCESS_KEY_ID: root
-        AWS_SECRET_ACCESS_KEY: pass
+        AWS_ACCESS_KEY_ID: test-key
+        AWS_SECRET_ACCESS_KEY: test-secret
         AWS_REGION: us-east-1
       entrypoint: /bin/bash -c "/bin/bash -c \"$${@}\""
       command: |
