@@ -1,0 +1,36 @@
+version: "3"
+services:
+    imagens:
+      container_name: imagens
+      image: tonanuvem/imagens-chat
+      ports:
+        - "8081:8081"
+      environment:
+        - "QUARKUS_DYNAMODB_ENDPOINT-OVERRIDE=http://localhost:8000"
+        - "QUARKUS_DYNAMODB_AWS_REGION=us-east-1"
+        - "QUARKUS_DYNAMODB_AWS_CREDENTIALS_TYPE=static"
+        - "QUARKUS_DYNAMODB_AWS_CREDENTIALS_STATIC-PROVIDER_ACCESS-KEY-ID=test-key"
+        - "QUARKUS_DYNAMODB_AWS_CREDENTIALS_STATIC-PROVIDER_SECRET-ACCESS-KEY=test-secret"
+      entrypoint: /bin/bash -c "/bin/bash -c \"$${@}\""
+      command: |
+               /bin/bash -c "
+                 echo executando entrypoint manual
+                 java -Dquarkus.http.host=0.0.0.0 -Dquarkus.dynamodb.endpoint-override=http://dynamodb:8000 -Dquarkus.dynamodb.aws.region=us-east-1 -Dquarkus.dynamodb.aws.credentials.type=static -Dquarkus.dynamodb.aws.credentials.static-provider.access-key-id=test-key -Dquarkus.dynamodb.aws.credentials.static-provider.secret-access-key=test-secret -Djava.util.logging.manager=org.jboss.logmanager.LogManager -XX:+ExitOnOutOfMemoryError -cp . -jar /deployments/app.jar
+               "
+    dynamodb:
+      container_name: dynamodb
+      image: amazon/dynamodb-local:latest
+      ports:
+        - "8000:8000"
+      volumes:
+        - ./volumes/dynamodb:/data/
+      environment:
+        AWS_ACCESS_KEY_ID: root
+        AWS_SECRET_ACCESS_KEY: pass
+        AWS_REGION: us-east-1
+      entrypoint: /bin/bash -c "/bin/bash -c \"$${@}\""
+      command: |
+               /bin/bash -c "
+                 echo executando entrypoint manual
+                 java -jar DynamoDBLocal.jar -sharedDb
+               "
