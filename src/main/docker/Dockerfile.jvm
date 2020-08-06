@@ -56,7 +56,7 @@ RUN microdnf install wget unzip \
     && chmod "g+rwX" /.aws \
     && chown 1001:root /.aws \
     && chown 1001 /.aws/credentials \
-    && chmod 540 /.aws/credentials
+    && chmod 660 /.aws/credentials
 #    && cat >> /.aws/credentials <<EOL \
 #    && [default] \
 #    && aws_access_key_id = test-key \
