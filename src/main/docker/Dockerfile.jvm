@@ -42,6 +42,27 @@ RUN microdnf install curl ca-certificates ${JAVA_PACKAGE} \
     && chmod 540 /deployments/run-java.sh \
     && echo "securerandom.source=file:/dev/urandom" >> /etc/alternatives/jre/lib/security/java.security
 
+# Instalar UNZIP e AWS para automatizar a criação do DynamoDB LOCAL
+RUN microdnf install wget unzip \
+    && mkdir /opt/aws \
+    && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/opt/aws/awscliv2.zip" \
+    && unzip /opt/aws/awscliv2.zip \
+    && sh /opt/aws/aws/install \
+    && echo AWSCLI \
+    && aws --version \
+    && cat >> /.aws/credentials <<EOL \
+    && [default]
+    && aws_access_key_id = test-key
+    && aws_secret_access_key = test-secret
+    && EOL
+#    && chown 1001 /opt/aws \
+#    && chmod "g+rwX" /opt/aws \
+#    && chown 1001:root /opt/aws \
+#    && curl https://repo1.maven.org/maven2/io/fabric8/run-java-sh/${RUN_JAVA_VERSION}/run-java-sh-${RUN_JAVA_VERSION}-sh.sh -o /deployments/run-java.sh \
+#    && chown 1001 /deployments/run-java.sh \
+#    && chmod 540 /deployments/run-java.sh \
+#    && echo "securerandom.source=file:/dev/urandom" >> /etc/alternatives/jre/lib/security/java.security
+    
 # Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
 ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 
