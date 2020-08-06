@@ -19,6 +19,8 @@ chmod +x mvnw
 docker run --publish 8000:8000 amazon/dynamodb-local:1.11.477 -jar DynamoDBLocal.jar -inMemory -sharedDb
 
 aws dynamodb create-table --table-name ImagensDB --endpoint-url http://localhost:8000  --attribute-definitions AttributeName=idName,AttributeType=S --key-schema AttributeName=idName,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
+
+aws dynamodb list-tables --endpoint-url http://localhost:8000
 ```
 
 ## Configs do DynamoDB Local : application.properties (com DynamoDB local)
