@@ -5,21 +5,20 @@ services:
       image: imagens #tonanuvem/imagens-chat
       ports:
         - "8081:8081"
-      environment:
-        - "QUARKUS_DYNAMODB_ENDPOINT-OVERRIDE=http://localhost:8000"
-        - "QUARKUS_DYNAMODB_AWS_REGION=us-east-1"
-        - "QUARKUS_DYNAMODB_AWS_CREDENTIALS_TYPE=static"
-        - "QUARKUS_DYNAMODB_AWS_CREDENTIALS_STATIC-PROVIDER_ACCESS-KEY-ID=test-key"
-        - "QUARKUS_DYNAMODB_AWS_CREDENTIALS_STATIC-PROVIDER_SECRET-ACCESS-KEY=test-secret"
+      #environment: só pega via command
+      #  - "QUARKUS_DYNAMODB_ENDPOINT-OVERRIDE=http://localhost:8000"
+      #  - "QUARKUS_DYNAMODB_AWS_REGION=us-east-1"
+      #  - "QUARKUS_DYNAMODB_AWS_CREDENTIALS_TYPE=static"
+      #  - "QUARKUS_DYNAMODB_AWS_CREDENTIALS_STATIC-PROVIDER_ACCESS-KEY-ID=test-key"
+      #  - "QUARKUS_DYNAMODB_AWS_CREDENTIALS_STATIC-PROVIDER_SECRET-ACCESS-KEY=test-secret"
       entrypoint: /bin/bash -c "/bin/bash -c \"$${@}\""
       command: |
                /bin/bash -c "
                  echo executando entrypoint manual
-                 #echo "[default]"  >> /.aws/credentials
-                 #echo "aws_access_key_id = test-key" >> /.aws/credentials
-                 #echo "aws_secret_access_key = test-secret" >> /.aws/credentials
-                 #cat /.aws/credentials
                  aws --version
+                 aws configure set aws_access_key_id test-key
+                 aws configure set aws_secret_access_key test-secret
+                 cat /.aws/credentials
                  echo Waiting for DynamoDB service start...;
                  while ! nc -z dynamodb 8000; do
                    echo .
